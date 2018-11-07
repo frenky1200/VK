@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">VK</string>
+    <integer name="com_vk_sdk_AppId">6743805</integer>
+</resources>
