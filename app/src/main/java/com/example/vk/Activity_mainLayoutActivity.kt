@@ -10,21 +10,21 @@ class SomeActivity : AnkoComponent<MainActivity> {
     override fun createView(ui: AnkoContext<MainActivity>): View = with(ui){
 
         constraintLayout {
-            textView("Hello World!") {
+            editText {
                 id = R.id.ww
-            }.lparams(width = wrapContent, height = wrapContent){
+            }.lparams(width = matchParent, height = wrapContent){
                 leftMargin = dip(2)
                 rightMargin = dip(10)
                 bottomMargin = dip(10)
-                topToBottom = R.id.up
+                topToBottom = R.id.qq
                 leftToLeft = PARENT_ID
-                bottomToBottom = PARENT_ID
+                //bottomToBottom = PARENT_ID
                 rightToRight = PARENT_ID
-                horizontalBias = 0.25f
+                //horizontalBias = 0.25f
             }
-            button("GO!"){
+            button("Start"){
                 id = R.id.qq
-            }.lparams(width = wrapContent, height = wrapContent){
+            }.lparams(width = matchParent, height = wrapContent){
                 topToTop = PARENT_ID
                 leftToLeft = PARENT_ID
                 rightToRight = PARENT_ID
