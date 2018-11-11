@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.IBinder
 import com.vk.sdk.VKSdk
 import com.vk.sdk.api.VKError
+import com.vk.sdk.api.VKParameters
 import com.vk.sdk.api.VKRequest
 import com.vk.sdk.api.VKResponse
 import kotlinx.coroutines.GlobalScope
