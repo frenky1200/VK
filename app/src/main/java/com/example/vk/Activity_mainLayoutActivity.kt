@@ -29,6 +29,13 @@ class SomeActivity : AnkoComponent<MainActivity> {
                 leftToLeft = PARENT_ID
                 rightToRight = PARENT_ID
             }
+            button("Stop"){
+                id = R.id.stop
+            }.lparams(width = matchParent, height = wrapContent){
+                bottomToBottom = PARENT_ID
+                leftToLeft = PARENT_ID
+                rightToRight = PARENT_ID
+            }
 
         }
     }

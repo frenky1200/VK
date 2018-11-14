@@ -2,10 +2,8 @@ package com.example.vk
 
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.StrictMode
-import android.preference.Preference
 import android.widget.Button
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
@@ -16,6 +14,7 @@ import com.vk.sdk.api.VKError
 import org.jetbrains.anko.find
 import org.jetbrains.anko.setContentView
 import org.jetbrains.anko.startService
+import org.jetbrains.anko.stopService
 
 
 class MainActivity : AppCompatActivity() {
@@ -28,10 +27,16 @@ class MainActivity : AppCompatActivity() {
         SomeActivity().setContentView(this)
         val editText = find<EditText>(R.id.ww)
         val button = find<Button>(R.id.qq)
+        val buttonStop = find<Button>(R.id.stop)
 
-        val pref = getPreferences(Context.MODE_PRIVATE)
+        val pref = getSharedPreferences("prefs", Context.MODE_PRIVATE)
+        buttonStop.setOnClickListener {
+            startService<MyService>()
+            stopService<MyService>()
+        }
         button.setOnClickListener {
             pref.edit().putString("text", editText.text.toString()).apply()
+            stopService<MyService>()
             startService<MyService>("token" to token.accessToken, "text" to editText.text.toString())
         }
         VKSdk.login(this, "messages")

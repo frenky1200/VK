@@ -2,4 +2,5 @@
 <resources>
     <item name="qq" type="id"/>
     <item name="ww" type="id"/>
+    <item name="stop" type="id"/>
 </resources>
