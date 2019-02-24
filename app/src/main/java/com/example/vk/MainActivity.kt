@@ -11,10 +11,8 @@ import com.vk.sdk.VKAccessToken
 import com.vk.sdk.VKCallback
 import com.vk.sdk.VKSdk
 import com.vk.sdk.api.VKError
-import org.jetbrains.anko.find
-import org.jetbrains.anko.setContentView
-import org.jetbrains.anko.startService
-import org.jetbrains.anko.stopService
+import org.jetbrains.anko.*
+import org.jetbrains.anko.custom.style
 
 
 class MainActivity : AppCompatActivity() {
@@ -28,6 +26,16 @@ class MainActivity : AppCompatActivity() {
         val editText = find<EditText>(R.id.ww)
         val button = find<Button>(R.id.qq)
         val buttonStop = find<Button>(R.id.stop)
+        button.setBackgroundResource(R.drawable.btn_rounded_corner)
+        buttonStop.setBackgroundResource(R.drawable.btn_rounded_corner)
+
+        if (VKSdk.isLoggedIn()){
+            token = VKAccessToken.currentToken()
+        } else {
+            VKSdk.login(this, "messages")
+        }
+        val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
+        StrictMode.setThreadPolicy(policy)
 
         val pref = getSharedPreferences("prefs", Context.MODE_PRIVATE)
         buttonStop.setOnClickListener {
@@ -39,9 +47,6 @@ class MainActivity : AppCompatActivity() {
             stopService<MyService>()
             startService<MyService>("token" to token.accessToken, "text" to editText.text.toString())
         }
-        VKSdk.login(this, "messages")
-        val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
-        StrictMode.setThreadPolicy(policy)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -49,7 +54,9 @@ class MainActivity : AppCompatActivity() {
                 override fun onResult(res: VKAccessToken) {
                     token = VKAccessToken.currentToken()
                 }
-                override fun onError(error: VKError) {}
+                override fun onError(error: VKError) {
+                    toast(error.errorMessage)
+                }
             })
         ) {
             super.onActivityResult(requestCode, resultCode, data)

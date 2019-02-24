@@ -7,9 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.IBinder
 import com.vk.sdk.VKSdk
-import com.vk.sdk.api.VKError
-import com.vk.sdk.api.VKRequest
-import com.vk.sdk.api.VKResponse
+import com.vk.sdk.api.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.json.JSONObject
@@ -27,6 +25,7 @@ class MyService : Service() {
     lateinit var ts: String
     private lateinit var token: String
     lateinit var text: String
+    var q = false
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         if (intent!!.extras != null){
@@ -35,7 +34,7 @@ class MyService : Service() {
             text = prefs.getString("text", "че та не так")!!
             val notification = Notification.Builder(applicationContext)
                 .setContentTitle("Now working")
-                .setSmallIcon(R.drawable.notification_icon_background)
+                .setSmallIcon(android.R.drawable.ic_media_play)
                 .setContentText(text)
                 .setOngoing(true)
             val notificationManager = this.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -45,7 +44,7 @@ class MyService : Service() {
         }
         return START_STICKY
     }
-    var q = true
+
     override fun onDestroy() {
         super.onDestroy()
         val notificationManager = applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -68,7 +67,9 @@ class MyService : Service() {
             }
 
             override fun onError(error: VKError?) {
-
+                GlobalScope.launch {
+                    getLongPool()
+                }
             }
         })
     }
@@ -80,6 +81,7 @@ class MyService : Service() {
                 .bufferedReader()
                 .use { it.readText() }
         } catch (e: IOException) {
+            GlobalScope.launch { longPool(server, key, ts) }
             "Error with ${e.message}."
         }
         val a = JSONObject(response).getJSONArray("updates")
@@ -102,6 +104,7 @@ class MyService : Service() {
     private fun sendMessage(id: Int, msg:String, token: String, v:String) {
         //val msg1 = "Это%20Автоответчик%20повторяка.%20Вы%20написали%20мне:%20"
         if (msg != text && q) {
+
             val post =
                 VKRequest("messages.send?user_id=$id&message=${text.replace(" ", "%20")}&access_token=$$token&v=$v")
             post.executeWithListener(object : VKRequest.VKRequestListener() {
@@ -114,5 +117,7 @@ class MyService : Service() {
                 }
             })
         }
+
+
     }
 }
